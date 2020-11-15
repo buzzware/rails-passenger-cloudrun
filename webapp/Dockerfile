@@ -1,4 +1,4 @@
-FROM phusion/passenger-ruby23:0.9.19
+FROM phusion/passenger-ruby25
 
 # Set correct environment variables.
 ENV HOME /root
@@ -8,7 +8,13 @@ CMD ["/sbin/my_init"]
 
 # Additional packages: we are adding the netcat package so we can
 # make pings to the database service
-RUN apt-get update && apt-get install -y -o Dpkg::Options::="--force-confold" netcat
+RUN apt-get update && apt-get install -y -o Dpkg::Options::="--force-confold" netcat \
+    build-essential \
+    nodejs \
+    libpq-dev \
+    nano \
+    wget \
+    gettext-base
 
 # Enable Nginx and Passenger
 RUN rm -f /etc/service/nginx/down
