@@ -2,6 +2,7 @@ FROM phusion/passenger-ruby25
 
 # Set correct environment variables.
 ENV HOME /root
+#ENV RAILS_ENV production
 
 # Use baseimage-docker's init process.
 CMD ["/sbin/my_init"]
@@ -22,7 +23,11 @@ RUN rm -f /etc/service/nginx/down
 # Add virtual host entry for the application. Make sure
 # the file is in the correct path
 RUN rm /etc/nginx/sites-enabled/default
-ADD webapp.conf /etc/nginx/sites-enabled/webapp.conf
+
+
+#ADD webapp.conf /etc/nginx/sites-enabled/webapp.conf
+COPY nginx.tmpl /root/nginx.tmpl
+CMD /bin/sh -c "envsubst < /root/nginx.tmpl > /etc/nginx/sites-enabled/nginx.conf || cat /etc/nginx/sites-enabled/nginx.conf"
 
 # In case we need some environmental variables in Nginx. Make sure
 # the file is in the correct path
@@ -47,4 +52,4 @@ WORKDIR /home/app/webapp
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-EXPOSE 80
+EXPOSE $PORT
