@@ -54,6 +54,7 @@ EXPOSE $PORT
 
 COPY 25_docker_start.sh /etc/my_init.d/25_docker_start.sh
 RUN chmod +x /etc/my_init.d/25_docker_start.sh
+RUN rm -f /etc/my_init.d/10_syslog-ng.init
 
 # Use baseimage-docker's init process.
 CMD ["/sbin/my_init"]
