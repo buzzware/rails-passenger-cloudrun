@@ -52,8 +52,8 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 EXPOSE $PORT
 
-COPY docker_start.sh /etc/my_init.d/docker_start.sh
-RUN chmod +x /etc/my_init.d/docker_start.sh
+COPY 25_docker_start.sh /etc/my_init.d/25_docker_start.sh
+RUN chmod +x /etc/my_init.d/25_docker_start.sh
 
 # Use baseimage-docker's init process.
 CMD ["/sbin/my_init"]
