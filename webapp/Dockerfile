@@ -17,6 +17,8 @@ RUN apt-get update && apt-get install -y -o Dpkg::Options::="--force-confold" ne
     wget \
     gettext-base
 
+RUN echo 'after apt-get'
+
 # Enable Nginx and Passenger
 RUN rm -f /etc/service/nginx/down
 
@@ -27,7 +29,7 @@ RUN rm /etc/nginx/sites-enabled/default
 
 #ADD webapp.conf /etc/nginx/sites-enabled/webapp.conf
 COPY nginx.tmpl /root/nginx.tmpl
-CMD /bin/sh -c "envsubst < /root/nginx.tmpl > /etc/nginx/sites-enabled/nginx.conf || cat /etc/nginx/sites-enabled/nginx.conf"
+CMD /bin/sh -c "/usr/bin/envsubst < /root/nginx.tmpl > /etc/nginx/sites-enabled/nginx.conf || cat /etc/nginx/sites-enabled/nginx.conf"
 
 # In case we need some environmental variables in Nginx. Make sure
 # the file is in the correct path
@@ -39,6 +41,9 @@ WORKDIR /tmp
 ADD Gemfile /tmp/
 ADD Gemfile.lock /tmp/
 RUN bundle install
+
+RUN echo 'after bundle install'
+
 
 # Copy application into the container and use right permissions: passenger
 # uses the app user for running the application
