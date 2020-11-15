@@ -4,8 +4,6 @@ FROM phusion/passenger-ruby25
 ENV HOME /root
 #ENV RAILS_ENV production
 
-# Use baseimage-docker's init process.
-CMD ["/sbin/my_init"]
 
 # Additional packages: we are adding the netcat package so we can
 # make pings to the database service
@@ -25,11 +23,6 @@ RUN rm -f /etc/service/nginx/down
 # Add virtual host entry for the application. Make sure
 # the file is in the correct path
 RUN rm /etc/nginx/sites-enabled/default
-
-
-#ADD webapp.conf /etc/nginx/sites-enabled/webapp.conf
-COPY nginx.tmpl /root/nginx.tmpl
-CMD /bin/sh -c "/usr/bin/envsubst < /root/nginx.tmpl > /etc/nginx/sites-enabled/nginx.conf || cat /etc/nginx/sites-enabled/nginx.conf"
 
 # In case we need some environmental variables in Nginx. Make sure
 # the file is in the correct path
@@ -58,3 +51,9 @@ WORKDIR /home/app/webapp
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 EXPOSE $PORT
+
+COPY docker_start.sh /etc/my_init.d/docker_start.sh
+RUN chmod +x /etc/my_init.d/docker_start.sh
+
+# Use baseimage-docker's init process.
+CMD ["/sbin/my_init"]
